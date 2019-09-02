@@ -1,6 +1,6 @@
 description "Docker daemon"
 
-start on (filesystem and net-device-up IFACE!=lo)
+start on started rsyslog
 stop on runlevel [!2345]
 
 limit nofile 524288 1048576
@@ -34,16 +34,26 @@ pre-start script
 			fi
 		done
 	)
+	# Some tools may *partially* mount cgroups on legacy /cgroup path.
+	# Since not all cgroups may be mounted, docker will fail.
+	# Hence we override /cgroup with properly mounted cgroups.
+    mountpoint -q /cgroup || mount --bind /sys/fs/cgroup /cgroup
 end script
 
 script
-	# modify these in /etc/default/$UPSTART_JOB (/etc/default/docker)
+	# modify these in /etc/default/$UPSTART_JOB (/etc/default/dockerd)
 	DOCKERD=/usr/bin/dockerd
 	DOCKER_OPTS=
 	if [ -f /etc/default/$UPSTART_JOB ]; then
 		. /etc/default/$UPSTART_JOB
 	fi
-	exec "$DOCKERD" $DOCKER_OPTS --raw-logs
+	# Centos 6.x verison of upstart is old, hence we need to take
+    # care of the logs ourselves
+    exec bash <<EOF
+        exec 1> >(logger -t dockerd) 2>&1
+		exec "$DOCKERD" $DOCKER_OPTS --raw-logs
+EOF
+
 end script
 
 # Don't emit "started" event until docker.sock is ready.
