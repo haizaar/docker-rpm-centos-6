@@ -18,6 +18,8 @@ Requires: device-mapper-libs >= 1.02.90-1
 Requires: bash
 
 %description
+NOTE: This are docker-ce static binaries repackaged in RPM format for CentOS 6.
+
 Docker is a product for you to build, ship and run any application as a
 lightweight container.
 
