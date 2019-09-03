@@ -1,13 +1,12 @@
 Name: docker
 Version: %{_version}
 Release: %{_release}%{?dist}
-Source0: engine.tgz
-Source1: docker.service
-Source2: docker.socket
 Summary: The open-source application container engine
 Group: Tools/Docker
 License: ASL 2.0
-URL: https://www.docker.com
+# Surely I'm not trying to take Docker's credit, but merely
+# give some idea where this RPM comes from.
+URL: https://github.com/haizaar/docker-rpm-centos-6
 Vendor: Docker
 Packager: Zaar Hai <haizaar@haizaar.com>
 
