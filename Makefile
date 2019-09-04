@@ -32,4 +32,3 @@ $(RPMPATH): $(TARBALLPATH) docker.spec dockerd.default dockerd.conf.upstart
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)
-	rm -rf tarball rpm
